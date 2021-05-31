@@ -7,6 +7,12 @@ import java.util.List;
 
 public abstract class HelpCommand extends NodeCommand
 {
+	protected final int depth;
+
+	public HelpCommand(int depth)
+	{
+		this.depth = depth;
+	}
 
 	@Override
 	public boolean perform(Player p, String[] args)
@@ -17,11 +23,11 @@ public abstract class HelpCommand extends NodeCommand
 		p.sendMessage(" ");
 		p.sendMessage(getPrefix());
 		p.sendMessage(" ");
-		if (args.length >= 1 && !args[0].equalsIgnoreCase("help"))
+		if (args.length >= depth && !args[depth].equalsIgnoreCase("help"))
 		{
 			for (int i = 0; i < commandTree.getSubCommands().size(); i++)
 			{
-				if (commandTree.getSubCommands().get(i).getName().equalsIgnoreCase(args[0]))
+				if (commandTree.getSubCommands().get(i).getName().equalsIgnoreCase(args[depth]))
 				{
 					p.sendMessage(ChatColor.DARK_GRAY + " - " + ChatColor.YELLOW + commandTree.getSubCommands().get(i).getSyntax() + " - " + ChatColor.GRAY + commandTree.getSubCommands().get(i).getDescription());
 				}
