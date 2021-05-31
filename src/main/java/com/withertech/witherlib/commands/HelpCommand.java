@@ -9,9 +9,12 @@ public abstract class HelpCommand extends NodeCommand
 {
 	protected final int depth;
 
-	public HelpCommand(int depth)
+	protected final CommandTree cmd;
+
+	public HelpCommand(int depth, CommandTree cmd)
 	{
 		this.depth = depth;
+		this.cmd = cmd;
 	}
 
 	@Override
@@ -23,20 +26,20 @@ public abstract class HelpCommand extends NodeCommand
 		p.sendMessage(" ");
 		p.sendMessage(getPrefix());
 		p.sendMessage(" ");
-		if (args.length >= depth && !args[depth].equalsIgnoreCase("help"))
+		if (args.length >= depth && !args[depth - 1].equalsIgnoreCase("help"))
 		{
-			for (int i = 0; i < commandTree.getSubCommands().size(); i++)
+			for (int i = 0; i < commandTree.getCommands().size(); i++)
 			{
-				if (commandTree.getSubCommands().get(i).getName().equalsIgnoreCase(args[depth]))
+				if (commandTree.getCommands().get(i).getName().equalsIgnoreCase(args[depth - 1]))
 				{
-					p.sendMessage(ChatColor.DARK_GRAY + " - " + ChatColor.YELLOW + commandTree.getSubCommands().get(i).getSyntax() + " - " + ChatColor.GRAY + commandTree.getSubCommands().get(i).getDescription());
+					p.sendMessage(ChatColor.DARK_GRAY + " - " + ChatColor.YELLOW + commandTree.getCommands().get(i).getSyntax() + " - " + ChatColor.GRAY + commandTree.getCommands().get(i).getDescription());
 				}
 			}
 		} else
 		{
-			for (int i = 0; i < commandTree.getSubCommands().size(); i++)
+			for (int i = 0; i < commandTree.getCommands().size(); i++)
 			{
-				p.sendMessage(ChatColor.DARK_GRAY + " - " + ChatColor.YELLOW + commandTree.getSubCommands().get(i).getSyntax() + " - " + ChatColor.GRAY + commandTree.getSubCommands().get(i).getDescription());
+				p.sendMessage(ChatColor.DARK_GRAY + " - " + ChatColor.YELLOW + commandTree.getCommands().get(i).getSyntax() + " - " + ChatColor.GRAY + commandTree.getCommands().get(i).getDescription());
 			}
 		}
 
@@ -50,7 +53,10 @@ public abstract class HelpCommand extends NodeCommand
 
 	protected abstract String getSuffix();
 
-	protected abstract CommandTree getCommandTree();
+	protected CommandTree getCommandTree()
+	{
+		return cmd;
+	}
 
 	@Override
 	public List<String> getSubcommandArguments(Player player, String[] args)

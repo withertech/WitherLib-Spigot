@@ -12,6 +12,8 @@ import java.util.List;
 
 public abstract class RootCommand implements TabExecutor, CommandTree
 {
+	List<NodeCommand> commands = new ArrayList<>();
+
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args)
 	{
@@ -21,13 +23,13 @@ public abstract class RootCommand implements TabExecutor, CommandTree
 
 			if (args.length > 0)
 			{
-				for (int i = 0; i < getSubCommands().size(); i++)
+				for (int i = 0; i < getCommands().size(); i++)
 				{
-					if (args[0].equalsIgnoreCase(getSubCommands().get(i).getName()))
+					if (args[0].equalsIgnoreCase(getCommands().get(i).getName()))
 					{
-						if (getSubCommands().get(i).getPermission() == null || p.hasPermission(getSubCommands().get(i).getPermission()))
+						if (getCommands().get(i).getPermission() == null || p.hasPermission(getCommands().get(i).getPermission()))
 						{
-							if (getSubCommands().get(i).perform(p, args))
+							if (getCommands().get(i).perform(p, args))
 							{
 								return true;
 							} else
@@ -48,7 +50,7 @@ public abstract class RootCommand implements TabExecutor, CommandTree
 		return true;
 	}
 
-	protected abstract NodeCommand getHelpCommand();
+	protected abstract HelpCommand getHelpCommand();
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
@@ -58,23 +60,35 @@ public abstract class RootCommand implements TabExecutor, CommandTree
 		{ //mail <subcommand> <args>
 			ArrayList<String> subcommandsArguments = new ArrayList<>();
 
-			for (int i = 0; i < getSubCommands().size(); i++)
+			for (int i = 0; i < getCommands().size(); i++)
 			{
-				subcommandsArguments.add(getSubCommands().get(i).getName());
+				subcommandsArguments.add(getCommands().get(i).getName());
 			}
 
 			return subcommandsArguments;
 		} else if (args.length >= 2)
 		{
-			for (int i = 0; i < getSubCommands().size(); i++)
+			for (int i = 0; i < getCommands().size(); i++)
 			{
-				if (args[0].equalsIgnoreCase(getSubCommands().get(i).getName()))
+				if (args[0].equalsIgnoreCase(getCommands().get(i).getName()))
 				{
-					return getSubCommands().get(i).getSubcommandArguments((Player) sender, args);
+					return getCommands().get(i).getSubcommandArguments((Player) sender, args);
 				}
 			}
 		}
 
 		return null;
+	}
+
+	@Override
+	public List<NodeCommand> getCommands()
+	{
+		return commands;
+	}
+
+	@Override
+	public void addCommand(NodeCommand cmd)
+	{
+		commands.add(cmd);
 	}
 }

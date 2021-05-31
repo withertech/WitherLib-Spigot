@@ -1,13 +1,10 @@
 package com.withertech.witherlib.commands;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface CommandTree
 {
-	ArrayList<NodeCommand> commands = new ArrayList<>();
+	void addCommand(NodeCommand cmd);
 
-	default ArrayList<NodeCommand> getSubCommands()
-	{
-		return commands;
-	}
+	List<NodeCommand> getCommands();
 }
