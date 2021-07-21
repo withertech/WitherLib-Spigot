@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'java'
-    id 'maven'
+    id 'maven-publish'
 }
 
 group = 'com.withertech'
@@ -49,19 +49,32 @@ artifacts {
     archives javadocJar
 }
 
-// To specify a license in the pom:
-install {
-  repositories.mavenInstaller {
-    pom.project {
-      licenses {
-        license {
-          name 'GNU GENERAL PUBLIC LICENSE, Version 3'
-          url 'https://raw.githubusercontent.com/licenses/license-templates/master/templates/gpl3.txt'
-          distribution 'repo'
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = 'WitherLib-Spigot'
+                licenses {
+                    license {
+                        name = 'GNU GENERAL PUBLIC LICENSE, Version 3'
+                        url = 'https://raw.githubusercontent.com/licenses/license-templates/master/templates/gpl3.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'witherking25'
+                        name = 'Witherking25'
+                        email = 'witherking@withertech.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/withertech/WitherLib-Spigot.git'
+                    developerConnection = 'scm:git:git://github.com/withertech/WitherLib-Spigot.git'
+                    url = 'https://github.com/withertech/WitherLib-Spigot/'
+                }
+            }
         }
-      }
     }
-  }
 }
 
 
